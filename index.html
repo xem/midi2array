@@ -71,13 +71,17 @@ if(FileReader){
   }, false);
 }
 
+delta0found = 0;
 showitems = i => {
   currenttrack = i;
   items.value = JSON.stringify(midiFile.tracks[i]);
   valuesarray = [];
   for(var j in midiFile.tracks[i]){
     if(midiFile.tracks[i][j].subtype && midiFile.tracks[i][j].subtype == "noteOn" && midiFile.tracks[i][j].noteNumber){
-      valuesarray.push(midiFile.tracks[i][j].noteNumber);
+      //if(midiFile.tracks[i][j].deltaTime != 0 || !delta0found){
+        valuesarray.push(midiFile.tracks[i][j].noteNumber);
+        delta0found = 1;
+      //}
     }
   }
   values.value = "[" + valuesarray + "]";
@@ -138,6 +142,7 @@ piano = e => {
 
 play_note = i => {
   currnoteinput.value = i;
+  console.log(valuesarray[i]);
   if(valuesarray[i]){
     piano(440*1.06**(valuesarray[i] - 80));
   }
@@ -173,7 +178,7 @@ next = () => {
     currnote++;
   }
   while(valuesarray[currnote] < +skip.value);
-  console.log(valuesarray[currnote]);
+  //console.log(valuesarray[currnote]);
   play_note(currnote)
 }
 
@@ -183,7 +188,7 @@ out = [];
 
 <h2>midi2array</h2>
 <ul>
-<li>Upload a MIDI file here: <input type=file id=f style=background:#def onchange="with(new FileReader)readAsDataURL(files[0]),onload=s=>play(result)"> (or use example file <button onclick="play('MM.mid')">here</button>)
+<li>Upload a MIDI file here: <input type=file id=f style=background:#def onchange="with(new FileReader)readAsDataURL(files[0]),onload=s=>play(result)"> (or use example file <button onclick="play('1.mid')">1</button> <button onclick="play('2.mid')">2</button> <button onclick="play('3.mid')">3</button> <button onclick="play('4.mid')">4</button> <button onclick="play('5.mid')">5</button> <button onclick="play('6.mid')">6</button> <button onclick="play('7.mid')">7</button> <button onclick="play('8.mid')">8</button> <button onclick="play('9.mid')">9</button> <button onclick="play('10.mid')">10</button>)
 <li>Choose the track you want to use (some tracks only contain metadata, choose one that contains notes)
 <li>Play them note by note and store the notes you want in a JS array
 <li>Tool made for my js13k 2021 entry. MIDI parser from <a href="https://github.com/gasman/jasmid">jasmid</a>
@@ -205,7 +210,7 @@ Track (note numbers only):
 <br>
 <textarea id=values cols=150 rows=5></textarea>
 <br>
-<button onclick="replayer = Replayer({header:midiFile.header, tracks:[midiFile.tracks[currenttrack]]}, synth); audio = AudioPlayer(replayer);">play current track</button> <button onclick="audio.stop()">stop</button> - <input value=0 size=1 id=currnoteinput> <button onclick="prev()">play prev note</button> <button onclick="play_note(currnote)">play current note</button> <button onclick="next()">play next note</button> <button onclick="addnote(currnote)">add note to output</button> - skip notes &lt; <input size=1 value=60 id=skip>
+<button onclick="replayer = Replayer({header:midiFile.header, tracks:[midiFile.tracks[currenttrack]]}, synth); audio = AudioPlayer(replayer);">play current track</button> <button onclick="audio.stop()">stop</button> - <input value=0 size=1 id=currnoteinput onchange="currnote=+value"> <button onclick="prev()">play prev note</button> <button onclick="play_note(currnote)">play current note</button> <button onclick="next()">play next note</button> <button onclick="addnote(currnote)">add note to output</button> - skip notes &lt; <input size=1 value=30 id=skip>
 
 <br>
 <br>

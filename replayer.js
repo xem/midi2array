@@ -1,7 +1,7 @@
 notes = [];
 function Replayer(midiFile, synth) {
 	var trackStates = [];
-	var beatsPerMinute = 70;
+	var beatsPerMinute = 60;
 	var ticksPerBeat = midiFile.header.ticksPerBeat;
 	var channelCount = 16;
 	
@@ -160,7 +160,7 @@ function Replayer(midiFile, synth) {
 	}
 	
 	function replay(audio) {
-		console.log('replay');
+		//console.log('replay');
 		audio.write(generate(44100));
 		setTimeout(function() {replay(audio)}, 10);
 	}
